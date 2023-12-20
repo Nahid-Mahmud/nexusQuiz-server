@@ -28,8 +28,10 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     // data collection
+    
     const usersCollection = client.db("nexuxQuiz").collection("users");
-    const quizCollection = client.db("nexuxQuiz").collection("quiz");
+
+    const quizCollection = client.db("nexuxQuiz").collection("quizes");
 
     // custom middlewares
     // verify token
@@ -75,6 +77,15 @@ async function run() {
       const user = await usersCollection.findOne(query);
       res.send(user);
     });
+
+    // quiz related apis
+    app.get("/quizes", async (req, res) => {
+      const cursor = quizCollection.find({});
+      const quizes = await cursor.toArray();
+      res.send(quizes);
+    });
+
+
   } finally {
   }
 }
