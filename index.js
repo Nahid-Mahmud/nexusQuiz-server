@@ -3,7 +3,7 @@ const app = express();
 const cors = require("cors");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 
 // running port number
 const port = process.env.PORT || 5000;
@@ -28,7 +28,7 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     // data collection
-    
+
     const usersCollection = client.db("nexuxQuiz").collection("users");
 
     const quizCollection = client.db("nexuxQuiz").collection("quizes");
@@ -85,7 +85,13 @@ async function run() {
       res.send(quizes);
     });
 
-
+    // get single quiz
+    app.get("/quiz/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const quiz = await quizCollection.findOne(query);
+      res.send(quiz);
+    });
   } finally {
   }
 }
