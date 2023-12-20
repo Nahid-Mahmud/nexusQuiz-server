@@ -32,6 +32,7 @@ async function run() {
     const usersCollection = client.db("nexuxQuiz").collection("users");
 
     const quizCollection = client.db("nexuxQuiz").collection("quizes");
+    const scoresCollection = client.db("nexuxQuiz").collection("scores");
 
     // custom middlewares
     // verify token
@@ -71,7 +72,7 @@ async function run() {
     });
 
     // get indivisual user data
-    app.get("/user/:email", veryfyToken, async (req, res) => {
+    app.get("/user/:email", async (req, res) => {
       const email = req.params.email;
       const query = { email: email };
       const user = await usersCollection.findOne(query);
@@ -92,6 +93,24 @@ async function run() {
       const quiz = await quizCollection.findOne(query);
       res.send(quiz);
     });
+
+    // post user quiz mark
+    app.post("/scores", async (req, res) => {
+      const score = req.body;
+      const result = await scoresCollection.insertOne(score);
+      res.send(result);
+    });
+
+    // get indivisul user score
+    app.get("/scores/:email", async (req, res) => {
+      const email = req.params.email;
+      const query = { email: email };
+      const cursor = scoresCollection.find(query);
+      const scores = await cursor.toArray();
+      res.send(scores);
+    });
+
+
   } finally {
   }
 }
