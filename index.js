@@ -101,6 +101,14 @@ async function run() {
       res.send(result);
     });
 
+    // delete quiz
+    app.delete("/quizes/:id", veryfyToken, async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await quizCollection.deleteOne(query);
+      res.send(result);
+    })
+
     // post user quiz mark
     app.post("/scores", async (req, res) => {
       const score = req.body;
