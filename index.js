@@ -94,6 +94,13 @@ async function run() {
       res.send(quiz);
     });
 
+    // post quiz
+    app.post("/quizes", veryfyToken, async (req, res) => {
+      const quiz = req.body;
+      const result = await quizCollection.insertOne(quiz);
+      res.send(result);
+    });
+
     // post user quiz mark
     app.post("/scores", async (req, res) => {
       const score = req.body;
@@ -109,8 +116,6 @@ async function run() {
       const scores = await cursor.toArray();
       res.send(scores);
     });
-
-
   } finally {
   }
 }
