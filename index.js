@@ -109,6 +109,16 @@ async function run() {
       res.send(result);
     })
 
+    // update quiz
+    app.put("/quizes/:id", veryfyToken, async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const updatedQuiz = req.body;
+      const newValues = { $set: updatedQuiz };
+      const result = await quizCollection.updateOne(query, newValues);
+      res.send(result);
+    })
+
     // post user quiz mark
     app.post("/scores", async (req, res) => {
       const score = req.body;
